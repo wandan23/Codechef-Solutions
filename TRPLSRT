@@ -1,0 +1,129 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define M 1000000007
+#define ll long long 
+#define pb push_back
+#define fo(i,N) for(int i = 0 ; i < N ; i++)
+#define foo(i,x,N) for (int i = x; i < N ; i++)
+#define fill(a,val) memset(a,val,sizeof(a))
+#define fastio()  ios_base::sync_with_stdio(false); cin.tie(NULL);
+#define endl '\n'
+#define ff first
+#define ss second
+#define pii pair<int,int> 
+#define pll pair<ll,ll> 
+#define all(a) a.begin(),a.end()
+
+
+int main()
+{
+    
+    
+    int T;
+    cin >> T;
+    while ( T--)
+    { 
+      int n,k;
+      cin >> n >> k;
+      int arr[n+1];
+      int pos[n+1];
+      int count = 0;
+      vector <int> l1,l2;
+      foo(i,1,n+1)
+      {
+        cin >> arr[i];
+        pos[arr[i]]=i;
+        if ( arr[i] != i )
+          count++;
+      }
+
+      if ( count == 0)
+      {
+        cout << 0 << endl;
+        continue;
+      }
+
+      if ( count == 2)
+      {
+        cout << -1 << endl;
+        continue;
+      }
+
+      int flag = 0;
+      count = 0;
+      vector <int> ans;
+      foo(i,1,n+1)
+      { 
+        if ( arr[i] == i || arr[i] == -1)
+          continue;
+       
+        int temp1 = pos[i];
+        int temp2 = arr[i];
+
+        if ( temp1 ==temp2)
+        { 
+          l1.pb(i);
+          l2.pb(temp1);
+          arr[temp1] = -1;
+          continue;
+        }
+         
+
+
+        ans.pb(i);
+        ans.pb(temp2);
+        ans.pb(temp1);
+
+        pos[arr[i]] = temp2;
+        pos[arr[temp1]] = i;
+        pos[arr[temp2]] = temp1;
+
+        swap(arr[i],arr[temp1]);
+        swap(arr[temp2],arr[temp1]);
+        count++; 
+
+       }
+       
+       if ( l1.size() & 1)
+       {
+        cout << -1 << endl;
+        continue;
+       }
+     
+      
+    
+
+        int temp1,temp2,temp3;
+       for(int i = 0; (i+1) <l1.size();i+=2)
+       {
+         temp1 =l1[i];
+         temp2 = l1[i+1];
+         temp3 = l2[i];
+         count++;
+         ans.pb(temp1);
+         ans.pb(temp2);
+         ans.pb(temp3);
+         temp1 = temp3;
+         temp2 = l2[i+1];
+         temp3 = l1[i+1];
+         count++;
+         ans.pb(temp1);
+         ans.pb(temp2);
+         ans.pb(temp3);
+        }
+
+       cout << count << endl;
+       
+       for(int i=0;i<ans.size();i+=3){
+        fo(j,3){
+          cout<<ans[j+i]<<" ";
+        }
+        cout<<endl;
+      }
+      
+
+
+    }
+    
+    return 0;
+}
