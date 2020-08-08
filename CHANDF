@@ -1,0 +1,112 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define M 1000000007
+#define ll long long 
+#define pb push_back
+#define fo(i,N) for(int i = 0 ; i < N ; i++)
+#define foo(i,x,N) for (int i = x; i < N ; i++)
+#define fill(a,val) memset(a,val,sizeof(a))
+#define fastio()  ios_base::sync_with_stdio(false); cin.tie(NULL);
+#define endl '\n'
+#define ff first
+#define ss second
+#define si 100005
+
+
+
+int main()
+{ int T;
+  cin>>T;
+  while(T--){
+    ll x,y,l,r;
+    cin>>x>>y>>l>>r;
+    if(x==0||y==0){
+      cout<<l<<endl;
+      continue;
+    }
+    ll num = x|y;
+    ll mask = 1ll;
+    while ( mask<=r)
+      mask<<=1;
+
+    mask = mask - 1;
+
+    int len = __builtin_popcountll(mask);
+    num &= mask;
+
+    set <ll> s;
+
+    if ( !(x&num) || !(y&num))
+    {
+      cout << l << endl;
+      continue;
+    }
+
+    if ( num <= r && num >= l)
+    {
+      cout << num << endl;
+      continue;
+    }
+    ll temp;
+    for(int i = len-1; i>=0; i--)
+    {
+      ll m = 1ll<<i;
+
+      if ( (m&num) && (m&r))
+      {
+        temp = (num)&(~m);
+        if ( temp <= r)
+          s.insert(temp);
+      }
+      else if ( !(m&r))
+        num = num&(~m);
+
+      if ( num <= r)
+        s.insert(num);
+    }
+
+    ll mans = 0;
+    ll res;
+    ll final = 0;
+    for (auto it =s.begin(); it != s.end();it++ )
+    { 
+      num = *it;
+      
+      for(int i = len-1; i>=0;i--)
+      {
+        ll m  = 1ll<<i;
+        if ( !(m&l) && !(m&num))
+        {
+          temp = num|m;
+          if ( temp>=l && temp<=r)
+          {  res = (x&temp)*(y&temp);
+            if ( (res>mans) || ((res==mans)&&(temp<final)))
+            {
+              mans = res;
+              final = temp;
+            }
+          }
+        }
+        else if ( m&l)
+          num = num|m;
+
+        if ( num <= r && num >= l)
+        {
+            res = (x&num)*(y&num);
+           if ( (res>mans) || ((res==mans)&&(num<final)))
+            {
+              mans = res;
+              final = num;
+            }
+        }
+      }
+    }
+     //cout << final << endl;
+     if((x&final)==0 || (y&final)==0 || final<l || final>r){
+            cout<<l<<endl;
+            continue; 
+        }
+      cout << final << endl;
+  }
+}
+   
