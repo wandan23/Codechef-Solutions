@@ -1,0 +1,150 @@
+#include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+using namespace std;
+#define M 1000000007
+#define ll long long
+#define pb push_back
+#define fo(i,N) for(int i = 0 ; i < N ; i++)
+#define foo(i,x,N) for (int i = x; i < N ; i++)
+#define fill(a,val) memset(a,val,sizeof(a))
+#define fastio()  ios_base::sync_with_stdio(false); cin.tie(NULL);
+#define endl '\n'
+#define ff first
+#define ss second
+#define MAX 1234567
+#define pii pair<int,int>
+#define pll pair<ll,ll>
+#define all(a) a.begin(),a.end()
+#define setbits(x) __builtin_popcountll(x)
+#define zrobits(x) __builtin_ctzll(x)
+#define inf 1e18
+// #define mp make_pair
+#define vi vector<int>
+#define pii pair<int,int>
+#define pqb priority_queue<int>
+#define pqs priority_queue<int,vi,greater<int>>
+/// find_by_order() -- returns the iterator to the kth largest
+/// order_of_key() -- number of elements strictly less than k
+ll mpow(ll x, ll y, ll m) {if ( y == 0) return 1;  if ( y & 1) return (x % m * mpow(x, y - 1, m) % m) % m; else  {ll temp = mpow(x, y / 2, m) % m; return (temp * temp) % m;}}
+ll power(ll x, ll y) {if ( y == 0) return 1;  if ( y & 1) return (x * power(x, y - 1)); else  {ll temp = power(x, y / 2); return (temp * temp);}}
+typedef tree<pair<int, int>, null_type, less<pair<int, int>>, rb_tree_tag,
+        tree_order_statistics_node_update>
+        pbds;
+void wandan23() {
+    fastio()
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+}
+
+
+int main() {
+    // fastio()
+    int t;
+    cin >> t;
+    while ( t--)
+    {
+        int n;
+        cin  >> n;
+        unordered_map <int, int> s;
+        unordered_map <int, int> x;
+        unordered_map <int, int> y;
+        int a;
+        int mn = 1e9 + 5;
+        fo(i, n)
+        {
+            cin >> a;
+            mn = min(mn, a);
+            s[a]++;
+            x[a]++;
+        }
+
+        fo(i, n)
+        {
+            cin >> a;
+            mn = min(mn, a);
+            s[a]++;
+            y[a]++;
+        }
+
+        vector <int> x1;
+        vector <int> x2;
+
+        int flag = 0;
+        for (auto it = s.begin(); it != s.end(); it++)
+        {
+            if ( it->second & 1)
+            {
+                flag = 1;
+                break;
+            }
+
+            if ( x[it->first] == y[it->first])
+                continue;
+            else if  ( x[it->first] > y[it->first])
+            {
+                fo(i, (x[it->first] - y[it->first]) / 2)
+                x1.pb(it->first);
+            }
+            else
+            {
+                fo(i, (y[it->first] - x[it->first]) / 2)
+                {   x1.pb(it->first);
+                    x2.pb(it->first);
+
+                }
+            }
+        }
+
+        if ( flag )
+        {
+            cout << -1 << endl;
+            continue;
+        }
+        ll ans = 0;
+
+        sort(all(x1));
+
+
+        int sz = x1.size();
+
+
+        int count = 0;
+        int i = 0;
+        while ( count < sz / 2)
+        {
+            if ( x1[i] <= (2 * mn))
+                ans += x1[i];
+            else
+                ans += 2 * mn;
+            i++;
+            count++;
+        }
+        cout << ans << endl;
+
+
+
+
+
+    }
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
