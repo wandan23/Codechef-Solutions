@@ -16,7 +16,6 @@ using namespace std;
 #define MAX 1234567
 #define pii pair<int,int>
 #define pll pair<ll,ll>
-#define all(a) a.begin(),a.end()
 #define setbits(x) __builtin_popcountll(x)
 #define zrobits(x) __builtin_ctzll(x)
 #define inf 1e18
