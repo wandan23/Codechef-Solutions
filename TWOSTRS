@@ -1,0 +1,220 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define M 1000000007
+#define ll long long 
+#define pb push_back
+#define fo(i,N) for(int i = 0 ; i < N ; i++)
+#define foo(i,x,N) for (int i = x; i < N ; i++)
+#define fill(a,val) memset(a,val,sizeof(a))
+#define fastio()  ios_base::sync_with_stdio(false); cin.tie(NULL);
+#define endl '\n'
+#define  MAX 260005
+
+int N;
+int val[10005];
+string s[10005];
+int g[MAX][27];
+int link[MAX][27];
+int f[MAX];
+int out[MAX];
+int states;
+
+
+void buildTrie()
+{
+  
+    fo(j,26)
+    g[0][j] = -1;
+  
+    out[0] = 0;
+
+   states = 1;
+  fo(i,N)
+  {
+    string temp = s[i];
+    int cur = 0;
+     
+    fo(j,temp.length())
+    {
+      int ch = temp[j]-'a';
+
+      if ( g[cur][ch] == -1)
+        { out[states] = 0;
+          fo(k,26)
+          { 
+            g[states][k] = -1;
+            link[states][k] = -1;
+          }
+          g[cur][ch] = states;
+          link[cur][ch] = states++;
+        }
+
+      cur = g[cur][ch];
+    }
+    out[cur] += val[i];
+  
+  }
+
+  fo(i,26)
+  {
+    if(g[0][i] == -1) g[0][i] = 0,link[0][i] = 0;
+  }
+}
+
+int go(int v,int c)
+{
+   if ( link[v][c] == -1)
+   {
+      if (g[v][c] != -1 )
+        link[v][c] = g[v][c];
+      else
+        link[v][c] = (v==0)?0:go(f[v],c);
+   }
+   return link[v][c];
+}
+
+void establishFailure()
+{
+   queue <int> q;
+
+   fo(ch,26)
+    {
+      if ( g[0][ch] != 0)
+       { 
+         q.push(g[0][ch]);
+        
+      }
+       f[g[0][ch]] = 0;
+    }
+
+    while (!q.empty())
+    { 
+      int cur = q.front();
+      q.pop();
+      int fail;
+      fo(ch,26)
+      {
+        if ( g[cur][ch] != -1)
+        {
+           fail = f[cur];
+
+          while ( g[fail][ch] == -1)
+            { 
+              fail = f[fail];
+            }
+          
+          fail = g[fail][ch];
+          f[g[cur][ch]] = fail;
+          out[g[cur][ch]] += out[fail];
+
+          
+
+          q.push(g[cur][ch]);
+        }
+        
+        link[cur][ch] = go(cur,ch);
+      }
+    }
+}
+
+
+
+
+
+
+ll calc(string txt)
+{ 
+  int cur = 0;
+  ll res = 0;
+  int ch;
+  fo(i,txt.length())
+  { 
+    ch = txt[i]-'a';
+   
+    cur = link[cur][ch];
+    res += out[cur];
+  }
+  return res;
+}
+
+
+int main()
+{  fastio()
+   int T;
+   cin >> T;
+   string s1;
+   string s2;
+   while ( T--)
+   {
+   
+    cin >> s1 >> s2;
+    cin >> N;
+    int m = 0;
+    int mn = 27;
+    fo(i,N)
+    { 
+      cin >> s[i] >> val[i];
+      m = max(m,(int)s[i].length());
+      mn = min(mn,(int)s[i].length());
+    }
+    
+    buildTrie();
+    establishFailure();
+    // fo(i,states)
+    // {
+    //   fo(j,26)
+    //   cout << link[i][j] << " ";
+    //   cout << endl;
+    // }
+
+
+  
+    ll ans = 0;   
+    int l1 = s1.length();
+    int l2 = s2.length();
+
+    ll leftt[l1];
+    ll rightt[l2];
+    ll left[l1];
+    ll right[l2];
+   
+    
+   fo(i,l1)
+    {
+      leftt[i] = calc(s1.substr(0,i+1));
+      if ( i < m-2)
+        left[i] = leftt[i];
+      else
+      left[i] = calc(s1.substr(max(0,i-(m-2)),min(m-1,i+1)));
+      
+    }
+   
+    fo(i,l2)
+    {
+      rightt[i] = calc(s2.substr(i,l2-i));
+      if ( i > (l2-m+1))
+        right[i] = rightt[i];
+      else
+      right[i] = calc(s2.substr(i,min(m-1,l2-i)));
+    }
+    
+    
+
+     
+    
+
+     fo(i,l1)
+     { 
+      fo(j,l2)
+      { 
+        if ( (i+1+l2-j) < mn)
+          continue;
+        ans = max(ans,leftt[i] + rightt[j]+calc(s1.substr(max(0,i-(m-2)),min(m-1,i+1)) + s2.substr(j,min(m-1,l2-j)))- (left[i]+ right[j]));
+      }
+     }
+
+     cout << ans << endl;
+
+
+   }
+}
